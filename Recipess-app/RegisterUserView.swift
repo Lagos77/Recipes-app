@@ -16,7 +16,6 @@ struct RegisterUserView: View {
     @State var username = ""
     @State var email = ""
     @State var password = ""
-    @State var name = ""
     
     var body: some View {
         
@@ -55,12 +54,6 @@ struct RegisterUserView: View {
 //            }
             VStack{
                 TextField("Username", text: $username)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(30)
-                    .padding(.horizontal, 40)
-                
-                TextField("Name", text: $name)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(30)
