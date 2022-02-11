@@ -30,6 +30,8 @@
 		2196C90927B4CCA800714D84 /* FirebaseStorageSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 2196C90827B4CCA800714D84 /* FirebaseStorageSwift-Beta */; };
 		2196C90B27B4CD2300714D84 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2196C90A27B4CD2300714D84 /* GoogleService-Info.plist */; };
 		2196C90D27B4CDC000714D84 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2196C90C27B4CDC000714D84 /* FirebaseManager.swift */; };
+		2196C90F27B4D93200714D84 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2196C90E27B4D93200714D84 /* LoginViewModel.swift */; };
+		2196C91127B4DE4E00714D84 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2196C91027B4DE4E00714D84 /* LoginManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,8 @@
 		21121CE527B2D53B009873C5 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		2196C90A27B4CD2300714D84 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2196C90C27B4CDC000714D84 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		2196C90E27B4D93200714D84 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		2196C91027B4DE4E00714D84 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +132,8 @@
 			children = (
 				21121CAD27B2CA1E009873C5 /* Recipess_appApp.swift */,
 				21121CAF27B2CA1E009873C5 /* ContentView.swift */,
+				2196C91027B4DE4E00714D84 /* LoginManager.swift */,
+				2196C90E27B4D93200714D84 /* LoginViewModel.swift */,
 				21121CE327B2D226009873C5 /* SearchView.swift */,
 				21121CDB27B2D183009873C5 /* UserSearchView.swift */,
 				21121CDF27B2D1EE009873C5 /* UserProfile.swift */,
@@ -313,8 +319,10 @@
 			files = (
 				21121CDE27B2D1B8009873C5 /* CreateRecipeView.swift in Sources */,
 				21121CDA27B2D133009873C5 /* RegisterUserView.swift in Sources */,
+				2196C90F27B4D93200714D84 /* LoginViewModel.swift in Sources */,
 				2196C90D27B4CDC000714D84 /* FirebaseManager.swift in Sources */,
 				21121CE027B2D1EE009873C5 /* UserProfile.swift in Sources */,
+				2196C91127B4DE4E00714D84 /* LoginManager.swift in Sources */,
 				21121CE627B2D53B009873C5 /* ImagePicker.swift in Sources */,
 				21121CD827B2D05C009873C5 /* GuestSearchView.swift in Sources */,
 				21121CE427B2D226009873C5 /* SearchView.swift in Sources */,

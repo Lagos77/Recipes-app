@@ -30,42 +30,43 @@ struct RegisterUserView: View {
                         Image(uiImage: imageSelected)
                             .resizable()
                             .frame(width: 200, height: 200)
-                            .foregroundColor(.black)
-                            .padding(.bottom, 100)
+                            .cornerRadius(100)
                     } else {
-                        Image(systemName: "person.crop.square")
-                            .resizable()
-                            .frame(width: 200, height: 200)
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 150))
+                            .padding()
                             .foregroundColor(.black)
-                            .padding(.bottom, 100)
                     }
                 }
-
-            }.sheet(isPresented: $openCamera) {
-                ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)
             }
-//            HStack{
-//
-//                Text("Enter your information below and select an avatar")
-//                    .font(.title)
-//                    .bold()
-//                    .foregroundColor(Color("ColorRed"))
-//                    .padding()
-//            }
+            .overlay(RoundedRectangle(cornerRadius: 100)
+                                                    .stroke(Color.black, lineWidth: 5))
+                .sheet(isPresented: $openCamera) {
+                    ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)
+
+            }
+                .padding(.vertical, 50)
+
             VStack{
                 TextField("Username", text: $username)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(30)
                     .padding(.horizontal, 40)
                 
                 TextField("Email", text: $email)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(30)
                     .padding(.horizontal, 40)
                 
                 SecureField("Password", text: $password)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(30)
@@ -74,7 +75,7 @@ struct RegisterUserView: View {
             
             HStack{
                 Button(action: {
-                    //verification()
+                    createAccount()
                 }, label: {
                     Text("Register".uppercased())
                         .font(.caption)
@@ -85,27 +86,44 @@ struct RegisterUserView: View {
                         .background(Capsule().stroke(Color.gray, lineWidth: 1.0)
                         )
                 })
-                
             }.padding(.top, 80)
         }
-        
     }
-/*    func verification() {
-        //Controls if all data is written
-        //Verifies if password == re-password
-        //Adds information to firebase
-        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
-            if let err = err {
-                print("Failed to create user:", err)
+    
+    func createAccount(){
+        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, error in
+            if error != nil {
+                print("Failed to create user")
+                //Alertmessage
                 return
             }
-            imageToStorage()
-            print("User created")
+            print("User created!")
+            self.imageToStorage()
+            return
         }
     }
- */
+
     private func imageToStorage() {
+       // let filename = UUID().uuidString
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         
+       let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+        
+        guard let imageData = self.imageSelected.jpegData(compressionQuality: 0.5) else {return}
+        
+        ref.putData(imageData, metadata: nil) { metadata, error in
+            if error != nil {
+                print("Failed to push image to Storage: \(error)")
+                return
+            }
+            ref.downloadURL { url, err in
+                if err != nil {
+                    print("Failed to retrive dowload URL: \(err)")
+                    return
+                }
+                print("Sucessfully stored with URL")
+            }
+        }
     }
 }
 
