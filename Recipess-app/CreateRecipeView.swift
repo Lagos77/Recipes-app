@@ -13,40 +13,50 @@ struct CreateRecipeView: View {
     @State var recipeInstructions = "Write your recipe here..."
     @State var descriptionText = "Write description for the recipe..."
     
+    @State var changeRecipePhoto = false
+    @State var openCamera = false
+    @State var imageSelected = UIImage()
+    
     var body: some View {
         VStack{
-        VStack{
-        TextField("Enter title", text: $titleRecipe)
-                .padding()
-                .font(.headline)
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(30)
-                .padding(.horizontal, 10)
-
-        }
-        .padding(.vertical, 15)
             VStack{
-                Image(systemName: "photo")
-                    .font(.system(size: 180))
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 2)
-                Text("Press for upload photo")
-                    .font(.system(size: 20, weight: .bold))
+                TextField("Enter title", text: $titleRecipe)
+                    .disableAutocorrection(true)
+                    .padding()
+                    .font(.headline)
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(30)
+                    .padding(.horizontal, 10)
             }
+        .padding(.vertical, 4)
             VStack{
-                TextEditor(text: $descriptionText)
-                    .frame(height: 60)
-                    .cornerRadius(5)
-                    .shadow(radius: 3)
+                Button {
+                    print("Button works")
+                } label: {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .frame(width: 190, height: 170)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 25)
+                }
             }
-            VStack{
-
-                TextEditor(text: $recipeInstructions)
-                    .frame(height: 310)
-                    .cornerRadius(5)
-                    .shadow(radius: 3)
-                
-            }
+                VStack{
+                    TextEditor(text: $descriptionText)
+                        .disableAutocorrection(true)
+                        .frame(height: 60)
+                        .cornerRadius(5)
+                        .shadow(radius: 3)
+                }
+                VStack{
+                    
+                    TextEditor(text: $recipeInstructions)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .frame(height: 310)
+                        .cornerRadius(5)
+                        .shadow(radius: 3)
+                }
             .padding(.bottom, 5)
             VStack{
                 Button {
@@ -65,11 +75,10 @@ struct CreateRecipeView: View {
                 
             }
             .padding()
+            }
+            .padding()
         }
-        .padding()
-        
     }
-}
 
 struct CreateRecipeView_Previews: PreviewProvider {
     static var previews: some View {

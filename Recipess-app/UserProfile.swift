@@ -6,21 +6,35 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct UserProfile: View {
     
     @State var username = ""
+    @ObservedObject var currentUser = CurrentUserViewModel()
     
     var body: some View {
         HStack(spacing: 70){
             VStack{
             VStack{
-                Image(systemName: "person.circle")
-                    .font(.system(size: 100))
-                    .padding(.horizontal, 10)
+                
+                WebImage(url: URL(string: currentUser.userLogged?.profileImageURL ?? ""))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 150, height: 150)
+                    .clipped()
+                    .cornerRadius(30)
+                    .overlay(RoundedRectangle(cornerRadius: 33)
+                                .stroke(Color(.label),
+                                       lineWidth: 1))
+                    .shadow(radius: 5)
+                
+                //Image(systemName: "person.circle")
+                //    .font(.system(size: 100))
+                //    .padding(.horizontal, 10)
             }
                 VStack{
-                    Text("Username")
+                    Text("\(currentUser.userLogged?.username ?? "")")
                         .font(.system(size: 30, weight: .bold))
                         .padding(.horizontal, 10)
                 }

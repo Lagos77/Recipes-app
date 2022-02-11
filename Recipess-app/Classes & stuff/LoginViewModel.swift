@@ -12,14 +12,13 @@ class LoginViewModel: ObservableObject {
     
     @Published var isLoggedIn = false
     func signIn(email: String, password: String) {
-        
-        FirebaseManager.shared.auth.signIn(withEmail: email, password: password) { [weak self] result, error in
+        FirebaseManager.shared.auth.signIn(withEmail: email, password: password) { result, error in
             guard result != nil, error == nil else {
                 print("Couldn't sign in")
                 return
             }
             DispatchQueue.main.async {
-                self?.isLoggedIn = true
+                self.isLoggedIn = true
                 print("Signed in !")
             }
         }

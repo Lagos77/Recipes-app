@@ -113,12 +113,10 @@ struct RegisterUserView: View {
         
         ref.putData(imageData, metadata: nil) { metadata, error in
             if error != nil {
-                print("Failed to push image to Storage: \(error)")
                 return
             }
             ref.downloadURL { url, err in
                 if err != nil {
-                    print("Failed to retrive dowload URL: \(err)")
                     return
                 }
                 print("Sucessfully stored with URL")

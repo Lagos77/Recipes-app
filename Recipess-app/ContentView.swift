@@ -9,20 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var loginModel = LoginViewModel()
-    
     var body: some View {
             if loginModel.isLoggedIn {
                 UserSearchView()
             } else {
                 SignIn(loginModel: loginModel)
             }
+        }
     }
-}
 
 struct SignIn: View{
     
-    @State var email = ""
-    @State var password = ""
+    @State private var email = ""
+    @State private var password = ""
     @ObservedObject var loginModel : LoginViewModel
     
     var body: some View{

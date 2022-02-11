@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct UserSearchView: View {
     
     @State var logutOption = false
+    @ObservedObject var currentUser = CurrentUserViewModel()
     
     let food = [
         "Pasta", "Lasagna", "Pizza", "Rice", "Potato", "Noddles", "ca", "Meat", "Chicken", "Fish", "Mushroom"]
@@ -24,13 +26,26 @@ struct UserSearchView: View {
                     NavigationLink {
                         UserProfile()
                     } label: {
-                        Image(systemName: "person.fill")
-                            .foregroundColor(Color("ColorRed"))
-                            .font(.system(size: 35, weight: .heavy))
-                            .padding(.horizontal, 5)
+                        
+                        WebImage(url: URL(string: currentUser.userLogged?.profileImageURL ?? ""))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipped()
+                            .cornerRadius(20)
+                            .overlay(RoundedRectangle(cornerRadius: 44)
+                                        .stroke(Color(.label),
+                                                lineWidth: 1))
+                            .shadow(radius: 5)
+                            .padding(.horizontal, 10)
+                        
+                        // Image(systemName: "person.fill")
+                        //     .foregroundColor(Color("ColorRed"))
+                        //     .font(.system(size: 35, weight: .heavy))
+                        //     .padding(.horizontal, 5)
                     }
                     VStack(alignment: .leading, spacing: 4){
-                        Text("Username")
+                        Text("\(currentUser.userLogged?.username ?? "")")
                             .font(.system(size: 24, weight: .bold))
                     }
                     Spacer()
@@ -48,10 +63,13 @@ struct UserSearchView: View {
                         .init(title: Text("Settings"), message: Text("Do you want to sign out?"), buttons: [
                             .destructive(Text("Sign out"), action: {
                                 print("Sign out current user!")
-                                //Firebase auth signout
+                                currentUser.signOut()
                             }),
                             .cancel()
                         ])
+                    }
+                    .fullScreenCover(isPresented: $currentUser.currentUserIsLoggedOut, onDismiss: nil) {
+                        ContentView()
                     }
                 }
                 VStack(alignment: .leading) {
@@ -92,7 +110,6 @@ struct UserSearchView: View {
                 }), alignment: .bottom)
             .navigationBarHidden(true)
         }
-        
     }
 }
 
