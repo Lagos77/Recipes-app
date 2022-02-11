@@ -9,6 +9,8 @@ import SwiftUI
 
 struct UserSearchView: View {
     
+    @State var logutOption = false
+    
     let food = [
         "Pasta", "Lasagna", "Pizza", "Rice", "Potato", "Noddles", "ca", "Meat", "Chicken", "Fish", "Mushroom"]
     
@@ -32,6 +34,25 @@ struct UserSearchView: View {
                             .font(.system(size: 24, weight: .bold))
                     }
                     Spacer()
+                    VStack{
+                        Button {
+                            logutOption.toggle()
+                            print("Gear button works!")
+                        } label: {
+                            Image(systemName: "gear")
+                                .foregroundColor(Color("ColorRed"))
+                                .font(.system(size: 20, weight: .bold))
+                                .padding(.horizontal, 10)
+                        }
+                    }.actionSheet(isPresented: $logutOption) {
+                        .init(title: Text("Settings"), message: Text("Do you want to sign out?"), buttons: [
+                            .destructive(Text("Sign out"), action: {
+                                print("Sign out current user!")
+                                //Firebase auth signout
+                            }),
+                            .cancel()
+                        ])
+                    }
                 }
                 VStack(alignment: .leading) {
                     SearchView(searchText: $searchText, searching: $searching)

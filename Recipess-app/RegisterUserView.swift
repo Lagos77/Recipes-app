@@ -122,8 +122,24 @@ struct RegisterUserView: View {
                     return
                 }
                 print("Sucessfully stored with URL")
+                guard let url = url else {return}
+                userDataStore(imageProfileURL: url)
             }
         }
+    }
+    
+    private func userDataStore(imageProfileURL: URL){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        
+        let userData = ["email": self.email, "username": self.username, "uid": uid, "profileImageURL": imageProfileURL.absoluteString]
+        FirebaseManager.shared.firestore.collection("users").document(uid).setData(userData) { error in
+            if let error = error {
+                print(error)
+                return
+            }
+            print("User collection successfully created!")
+        }
+        
     }
 }
 
