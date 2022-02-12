@@ -10,7 +10,7 @@ import SwiftUI
 struct GuestSearchView: View {
     
     let food = [
-        "Pasta", "Lasagna", "Pizza", "Rice", "Potato", "Noddles", "ca", "Meat", "Chicken", "Fish", "Mushroom"]
+        "Pasta", "Lasagna", "Pizza", "Rice", "Potato", "Noddles", "Cow", "Meat", "Chicken", "Fish", "Mushroom"]
     
     @State var searchText = ""
     @State var searching = false
