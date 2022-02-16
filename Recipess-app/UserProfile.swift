@@ -12,6 +12,7 @@ struct UserProfile: View {
     
     @State var username = ""
     @ObservedObject var currentUser = CurrentUserViewModel()
+    //@Binding var data : [dataType]
     
     var body: some View {
         NavigationView{

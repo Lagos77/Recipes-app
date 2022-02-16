@@ -61,5 +61,16 @@ struct RecipeView: View {
         }
     }
 }
-                                 
+                  
+struct RecipeView_Previews: PreviewProvider {
+    static var previews: some View {
+        let id = "id"
+        let url = "Photo"
+        let title = "Title"
+        let description = "Description text.."
+        let recipe = "Recipe here"
+        
+        RecipeView(data: dataType(id: id, url: url, title: title, description: description, recipe: recipe))
+    }
+}
 

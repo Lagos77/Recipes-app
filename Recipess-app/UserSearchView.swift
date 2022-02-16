@@ -86,7 +86,7 @@ struct UserSearchView: View {
                                     }
                                 }.frame(height: UIScreen.main.bounds.height / 5)
                             }
-                        }
+                        }//if ends here
                     }
                     
                     
@@ -164,7 +164,7 @@ class getData : ObservableObject {
     }
 }
 
-struct dataType: Identifiable {
+struct dataType: Identifiable, Codable {
 
     var id : String?
     var url : String
