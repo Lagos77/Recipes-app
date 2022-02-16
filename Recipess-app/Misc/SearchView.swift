@@ -11,6 +11,8 @@ struct SearchView: View {
     
     @Binding var searchText : String
     @Binding var searching : Bool
+    @State var text = ""
+    //@Binding var data : [dataType]
     
     var body: some View {
         ZStack{
@@ -18,7 +20,7 @@ struct SearchView: View {
                 .foregroundColor(Color("SearchBar"))
             HStack{
                 Image(systemName: "magnifyingglass")
-                TextField("Search...", text: $searchText) {
+                TextField("Search...", text: $searchText){
                     startedSearching in
                     if startedSearching {
                         withAnimation {
@@ -29,6 +31,15 @@ struct SearchView: View {
                     withAnimation{
                         searching = false
                     }
+                }
+                
+                if self.text != "" {
+                    Button {
+                        self.text = ""
+                    } label: {
+                        Text("Cancel")
+                    }
+                    .foregroundColor(.black)
                 }
             }
             .foregroundColor(.gray)

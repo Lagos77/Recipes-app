@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-  //  @StateObject var loginModel = LoginViewModel()
+    @StateObject var loginModel = LoginViewModel()
+    @ObservedObject var data = getData()
+    
     var body: some View {
-        UserSearchView()
-  //          if loginModel.isLoggedIn {
-  //              UserSearchView()
-  //          } else {
-  //              SignIn(loginModel: loginModel)
-  //          }
+        if loginModel.isLoggedIn {
+            UserSearchView(data: self.$data.datas)
+        } else {
+            SignIn(loginModel: loginModel)
         }
     }
+}
 
 struct SignIn: View{
     

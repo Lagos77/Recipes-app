@@ -14,6 +14,7 @@ struct UserProfile: View {
     @ObservedObject var currentUser = CurrentUserViewModel()
     
     var body: some View {
+        NavigationView{
         HStack(spacing: 70){
             VStack{
             VStack{
@@ -50,8 +51,12 @@ struct UserProfile: View {
                                     .frame(height: 100)
                             }
                         }
+                        
                     }
+                    .padding()
+                    
                 }
+                
                 VStack(alignment: .leading){
                     Text("Saved recipes :")
                         .font(.system(size: 20))
@@ -64,9 +69,14 @@ struct UserProfile: View {
                                     .frame(height: 100)
                             }
                         }
+                        
                     }
+                    .padding()
                 }
+                
             }
+        }
+        .navigationBarHidden(true)
         }
     }
 }
