@@ -34,7 +34,8 @@
 		2196C90F27B4D93200714D84 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2196C90E27B4D93200714D84 /* LoginViewModel.swift */; };
 		2196C91427B6194700714D84 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2196C91327B6194700714D84 /* SDWebImageSwiftUI */; };
 		2196C91727B61CEF00714D84 /* CurrentUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2196C91627B61CEF00714D84 /* CurrentUserViewModel.swift */; };
-		21B1909527BB17A0006A3A9A /* AltSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B1909427BB179F006A3A9A /* AltSearchView.swift */; };
+		21AE281727BD8F1900531A8E /* EditRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE281627BD8F1900531A8E /* EditRecipeView.swift */; };
+		21AE281927BE28C200531A8E /* HUDProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE281827BE28C200531A8E /* HUDProgressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +78,8 @@
 		2196C90C27B4CDC000714D84 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		2196C90E27B4D93200714D84 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		2196C91627B61CEF00714D84 /* CurrentUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserViewModel.swift; sourceTree = "<group>"; };
-		21B1909427BB179F006A3A9A /* AltSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltSearchView.swift; sourceTree = "<group>"; };
+		21AE281627BD8F1900531A8E /* EditRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeView.swift; sourceTree = "<group>"; };
+		21AE281827BE28C200531A8E /* HUDProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDProgressView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 				21121CAF27B2CA1E009873C5 /* ContentView.swift */,
 				21121CDB27B2D183009873C5 /* UserSearchView.swift */,
 				21317D0527BC01E00010DCD1 /* RecipeView.swift */,
+				21AE281627BD8F1900531A8E /* EditRecipeView.swift */,
 				21121CDF27B2D1EE009873C5 /* UserProfile.swift */,
 				21121CDD27B2D1B8009873C5 /* CreateRecipeView.swift */,
 				21121CD927B2D133009873C5 /* RegisterUserView.swift */,
@@ -182,7 +185,6 @@
 		21317D0427BC01980010DCD1 /* Trash or Tests */ = {
 			isa = PBXGroup;
 			children = (
-				21B1909427BB179F006A3A9A /* AltSearchView.swift */,
 			);
 			path = "Trash or Tests";
 			sourceTree = "<group>";
@@ -193,6 +195,7 @@
 				2196C90E27B4D93200714D84 /* LoginViewModel.swift */,
 				2196C91627B61CEF00714D84 /* CurrentUserViewModel.swift */,
 				2196C90C27B4CDC000714D84 /* FirebaseManager.swift */,
+				21AE281827BE28C200531A8E /* HUDProgressView.swift */,
 			);
 			path = "Classes & stuff";
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21AE281927BE28C200531A8E /* HUDProgressView.swift in Sources */,
 				21121CDE27B2D1B8009873C5 /* CreateRecipeView.swift in Sources */,
 				21121CDA27B2D133009873C5 /* RegisterUserView.swift in Sources */,
 				2196C90F27B4D93200714D84 /* LoginViewModel.swift in Sources */,
@@ -363,7 +367,7 @@
 				21121CDC27B2D183009873C5 /* UserSearchView.swift in Sources */,
 				21317D0627BC01E00010DCD1 /* RecipeView.swift in Sources */,
 				21121CAE27B2CA1E009873C5 /* Recipess_appApp.swift in Sources */,
-				21B1909527BB17A0006A3A9A /* AltSearchView.swift in Sources */,
+				21AE281727BD8F1900531A8E /* EditRecipeView.swift in Sources */,
 				2196C91727B61CEF00714D84 /* CurrentUserViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

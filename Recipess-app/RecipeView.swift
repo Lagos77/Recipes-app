@@ -11,11 +11,14 @@ import SDWebImageSwiftUI
 struct RecipeView: View {
     
     var data : dataType
+    @State var showSheet = false
+    
     var body: some View {
         VStack{
             HStack{
                     Text(data.title)
                     .font(.title3)
+                    .bold()
                     .frame(height: 40)
                     .cornerRadius(10)
                     .padding(.horizontal, 60)
@@ -30,34 +33,52 @@ struct RecipeView: View {
                                 .stroke(Color.black, lineWidth: 2))
             }
             
-            HStack{
+           
+                HStack{
                     Text(data.description)
-                    .frame(height: 60)
-                    .cornerRadius(5)
-                    .padding(.horizontal, 15)
-                    //.shadow(radius: 3)
-            }
+                        .frame(width: 310, height: 100)
+                        .cornerRadius(5)
+                        .padding(.horizontal, 15)
+                }
+            
             ScrollView{
-            HStack{
+                HStack{
                     Text(data.recipe)
-                    .frame(height: 310)
-                    .cornerRadius(5)
-                    .padding(.horizontal, 15)
-                    //.shadow(radius: 3)
+                        .frame(width: 310, height: 350)
+                        .cornerRadius(5)
+                        .padding(.horizontal, 15)
                 }
             }
-            Button {
-                print("Saved to favorites")
-            } label: {
-                Text("Favorite")
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding()
-                    .padding(.horizontal, 25)
-                    .background(Color("ColorRed"))
-                    .cornerRadius(30)
-                    //.shadow(radius: 10)
+            HStack{
+                Button {
+                    print("Saved to favorites")
+                } label: {
+                    Text("Favorite")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding()
+                        .padding(.horizontal, 25)
+                        .background(Color("ColorRed"))
+                        .cornerRadius(30)
+                        .shadow(radius: 10)
+                }
+
+                Spacer()
+                Button {
+                    showSheet.toggle()
+                } label: {
+                    Text("Edit")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding()
+                        .padding(.horizontal, 25)
+                        .background(Color("ColorRed"))
+                        .cornerRadius(30)
+                        .shadow(radius: 10)
+                }
+                .fullScreenCover(isPresented: $showSheet,content: {EditRecipeView()})
             }
+            .padding()
         }
     }
 }
@@ -69,7 +90,7 @@ struct RecipeView_Previews: PreviewProvider {
         let title = "Title"
         let description = "Description text.."
         let recipe = "Recipe here"
-        
+    
         RecipeView(data: dataType(id: id, url: url, title: title, description: description, recipe: recipe))
     }
 }

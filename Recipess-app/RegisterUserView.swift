@@ -17,8 +17,15 @@ struct RegisterUserView: View {
     @State var email = ""
     @State var password = ""
     
+    @State var showAlert = false
+    @State var errorAlert = false
+    @State var alertShow = false
+    
+    @State var HUD = false
+    
     var body: some View {
         
+        NavigationView{
         VStack{
             VStack{
                 Button {
@@ -76,6 +83,10 @@ struct RegisterUserView: View {
             HStack{
                 Button(action: {
                     createAccount()
+                    withAnimation {
+                        HUD.toggle()
+                    }
+                    
                 }, label: {
                     Text("Register".uppercased())
                         .font(.caption)
@@ -83,18 +94,31 @@ struct RegisterUserView: View {
                         .foregroundColor(.gray)
                         .padding()
                         .padding(.horizontal, 10)
-                        .background(Capsule().stroke(Color.gray, lineWidth: 1.0)
-                        )
+                        .background(Capsule().stroke(Color.gray, lineWidth: 1.0))
                 })
-            }.padding(.top, 80)
-        }
+            }
+            .alert(isPresented: $alertShow, content:  {
+                alertEnabler()
+            })
+            .padding(.top, 80)
+            /*
+            if HUD{
+                HUDProgressView(placeHolder: "Please Wait", show: $HUD)
+            }
+             */
+            
+        }.navigationBarHidden(true)
     }
+}
     
     func createAccount(){
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, error in
             if error != nil {
                 print("Failed to create user")
                 //Alertmessage
+                self.alertShow = true
+                self.showAlert = false
+                self.errorAlert = true
                 return
             }
             print("User created!")
@@ -112,10 +136,16 @@ struct RegisterUserView: View {
         
         ref.putData(imageData, metadata: nil) { metadata, error in
             if error != nil {
+                self.alertShow = true
+                self.showAlert = false
+                self.errorAlert = true
                 return
             }
             ref.downloadURL { url, err in
                 if err != nil {
+                    self.alertShow = true
+                    self.showAlert = false
+                    self.errorAlert = true
                     return
                 }
                 print("Sucessfully stored with URL")
@@ -132,12 +162,44 @@ struct RegisterUserView: View {
         FirebaseManager.shared.firestore.collection("users").document(uid).setData(userData) { error in
             if let error = error {
                 print(error)
+                self.alertShow = true
+                self.showAlert = false
+                self.errorAlert = true
                 return
+                
             }
             print("User collection successfully created!")
+            self.errorAlert = false
+            self.showAlert = true
+            self.alertShow = true
         }
-        
     }
+    
+    private func regAlert() -> Alert {
+        return Alert(title: Text("Registration successful"),
+                     message: Text("You can now login with your new account"),
+                     dismissButton: .default(Text("Got it!")))
+    }
+    
+    private func errAlert() -> Alert {
+        return Alert(title: Text("Registration failed"),
+                     message: Text("An error occurred during registration. Failed to create user "), dismissButton: .default(Text("OK")))
+    }
+    
+    
+    private func alertEnabler() -> Alert {
+        if errorAlert == true {
+            return errAlert()
+        } else if showAlert == true {
+            return regAlert()
+        }
+        return alertEnabler()
+    }
+    
+    
+    
+    
+    
 }
 
 struct RegisterUserView_Previews: PreviewProvider {

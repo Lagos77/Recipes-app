@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import FirebaseFirestoreSwift
 
 struct UserSearchView: View {
     
@@ -71,6 +72,14 @@ struct UserSearchView: View {
                 VStack(alignment: .leading) {
                     SearchView(searchText: $searchText, searching: $searching)
                     
+                    List(self.data.filter{$0.title.lowercased().contains(self.searchText.lowercased())}) {i in
+                    
+                        NavigationLink(destination: RecipeView(data: i)) {
+                            Text(i.title)
+                        }.frame(height: UIScreen.main.bounds.height / 15)
+                    }
+                    
+                   /*
                     List{
                         if self.searchText != ""{
                             if self.data.filter({$0.title.lowercased().contains(self.searchText.lowercased())}).count == 0 {
@@ -79,16 +88,11 @@ struct UserSearchView: View {
                                 
                             } else {
                                 
-                                List(self.data.filter{$0.title.lowercased().contains(self.searchText.lowercased())}) {i in
-                                
-                                    NavigationLink(destination: RecipeView(data: i)) {
-                                        Text(i.title)
-                                    }
-                                }.frame(height: UIScreen.main.bounds.height / 5)
+
                             }
                         }//if ends here
-                    }
-                    
+                    }//List ends here
+                    */
                     
                  /*
                      List{
@@ -129,8 +133,8 @@ struct UserSearchView: View {
            
            .navigationBarHidden(true)
        }
-        
     }
+    
 }
 
 
@@ -143,6 +147,8 @@ extension UIApplication {
 class getData : ObservableObject {
     @Published var datas = [dataType]()
     init(){
+        
+        //Change get to snapshot. How?
         FirebaseManager.shared.firestore.collection("recipes").getDocuments { (snap, error) in
             guard let snap = snap else {return}
             
@@ -166,18 +172,11 @@ class getData : ObservableObject {
 
 struct dataType: Identifiable, Codable {
 
-    var id : String?
+    @DocumentID var id : String?
     var url : String
     var title : String
     var description : String
     var recipe : String
-}
-
-struct Detail : View {
-    var data : dataType
-    var body: some View{
-        Text(data.recipe)
-    }
 }
 
 /*

@@ -47,7 +47,6 @@ struct CreateRecipeView: View {
                                 .scaledToFill()
                                 .frame(width: 260, height: 200)
                                 .foregroundColor(.black)
-                            
                         }
                     }
                 }
@@ -63,7 +62,6 @@ struct CreateRecipeView: View {
                         .shadow(radius: 3)
                 }
                 HStack{
-                    
                     TextEditor(text: $recipeInstructions)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
@@ -114,7 +112,7 @@ struct CreateRecipeView: View {
         
         let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
         
-        FirebaseManager.shared.firestore.collection("recipes").document(uid).setData(recipeData) { err in
+        FirebaseManager.shared.firestore.collection("recipes").document(titleRecipe).setData(recipeData) { err in
             if let err = err {
                 print(err)
                 return

@@ -98,6 +98,8 @@ struct SignIn: View{
                                 Text("Register")
                                     .foregroundColor(Color.red.opacity(0.9))
                             })
+                        }.alert(isPresented: $loginModel.errorLog) {
+                            errorLogin()
                         }
                     }
                 }
@@ -106,6 +108,10 @@ struct SignIn: View{
             // .navigationViewStyle(StackNavigationViewStyle())
         }
     }
+    private func errorLogin() -> Alert {
+        return Alert(title: Text("Error during login"), message: Text("Wrong email or password. Please try again."), dismissButton: .default(Text("OK")))
+    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
