@@ -23,7 +23,7 @@ struct EditRecipeView: View {
     var body: some View{
         VStack{
             HStack{
-                TextEditor(text: $data.title)
+                TextEditor(text: $titleRecipe)
                     .disableAutocorrection(true)
                     .font(.title3)
                     .frame(height: 40)
@@ -58,7 +58,7 @@ struct EditRecipeView: View {
                 ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)}
             
             HStack{
-                TextEditor(text: $data.description)
+                TextEditor(text: $descriptionText)
                     .disableAutocorrection(true)
                     .frame(height: 60)
                     .cornerRadius(5)
@@ -67,7 +67,7 @@ struct EditRecipeView: View {
             }
             HStack{
                 
-                TextEditor(text: $data.recipe)
+                TextEditor(text: $recipeInstructions)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .frame(height: 310)
@@ -78,7 +78,6 @@ struct EditRecipeView: View {
             HStack{
                 Button {
                     editImage()
-                    print("Edit is saved!")
                     //updateRecipe()
                 } label: {
                     Text("Save Edit")
@@ -121,15 +120,19 @@ struct EditRecipeView: View {
                     .background(Capsule().stroke(Color.gray, lineWidth: 1.0))                }
             }
             .padding()
+        }.onAppear(){
+            titleRecipe = data.title
+            descriptionText = data.description
+            recipeInstructions = data.recipe
         }
     }
     
-//------------------------
-// Function for delete
-// Function for update
-//------------------------
+    //------------------------
+    // Function for delete
+    // Function for update
+    //------------------------
     
- 
+    
     private func deleteRecipe(recipeID : String?) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         guard let id = recipeID else {return}
@@ -139,38 +142,47 @@ struct EditRecipeView: View {
     }
     
     private func editImage() {
+        print("Starting editImage function David")
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        print("Read uid editImage David")
         
-           let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-            
-            guard let imageData = self.imageSelected.jpegData(compressionQuality: 0.5) else {return}
-            
-            ref.putData(imageData, metadata: nil) { metadata, error in
-                if error != nil {
+        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+        
+        guard let imageData = self.imageSelected.jpegData(compressionQuality: 0.5) else {return}
+        print("passing imageData editImage function David")
+        
+        ref.putData(imageData, metadata: nil) { metadata, error in
+            if error != nil {
+                print("Error putData imageData editImage function David")
+                return
+            }
+            ref.downloadURL { url, err in
+                if err != nil {
+                    print("ref.downloadURL error editImage fucntion David")
                     return
                 }
-                ref.downloadURL { url, err in
-                    if err != nil {
-                        return
-                    }
-                    print("Sucessfully stored with URL")
-                    guard let url = url else {return}
-                    editRecipe(recipeImageURL: url)
-                }
+                print("Sucessfully stored with URL")
+                guard let url = url else {return}
+                editRecipe(recipeImageURL: url)
             }
         }
+    }
     
     private func editRecipe(recipeImageURL: URL){
+        print("Starting editRecipe function David")
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        print("Read uid ediptRecipe David")
         
         let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
         
+        print("recipeData \(recipeData["description"]) David")
+        
         FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(titleRecipe).setData(recipeData) { err in
             if let err = err {
-                print(err)
+                print("Error during update of recipe David: \(err)")
                 return
             }
-            print("Recipe data sucessfully uploaded")
+            print("Recipe data sucessfully uploaded David")
             presentationMode.wrappedValue.dismiss()
         }
     }

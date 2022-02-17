@@ -17,7 +17,9 @@ struct UserSearchView: View {
     
     @State var searchText = ""
     @State var searching = false
-    @Binding var data : [dataType]
+    //@Binding var data : [dataType]
+    
+    @StateObject var viewModel = getData()
     
     var body: some View {
        NavigationView {
@@ -72,7 +74,7 @@ struct UserSearchView: View {
                 VStack(alignment: .leading) {
                     SearchView(searchText: $searchText, searching: $searching)
                     
-                    List(self.data.filter{$0.title.lowercased().contains(self.searchText.lowercased())}) {i in
+                    List(self.viewModel.datas.filter{$0.title.lowercased().contains(self.searchText.lowercased())}) {i in
                     
                         NavigationLink(destination: RecipeView(data: i)) {
                             Text(i.title)
@@ -178,6 +180,7 @@ class getData : ObservableObject {
                 print(error ?? "")
                 return
             }
+            self.datas.removeAll()
             for documents in snap.documents{
                 
                 let id = documents.documentID

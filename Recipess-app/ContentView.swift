@@ -9,11 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var loginModel = LoginViewModel()
-    @ObservedObject var data = getData()
     
     var body: some View {
         if loginModel.isLoggedIn {
-            UserSearchView(data: self.$data.datas)
+            UserSearchView()
         } else {
             SignIn(loginModel: loginModel)
         }
