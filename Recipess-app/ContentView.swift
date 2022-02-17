@@ -8,15 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var loginModel = LoginViewModel()
+    @ObservedObject var data = getData()
+    
     var body: some View {
-        UserSearchView()
+        if loginModel.isLoggedIn {
+            UserSearchView(data: self.$data.datas)
+        } else {
+            SignIn(loginModel: loginModel)
+        }
     }
 }
 
 struct SignIn: View{
     
-    @State var email = ""
-    @State var password = ""
+    @State private var email = ""
+    @State private var password = ""
+    @ObservedObject var loginModel : LoginViewModel
     
     var body: some View{
         NavigationView{
@@ -25,78 +33,85 @@ struct SignIn: View{
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                 
+                VStack{
+                    
+                    HStack{
+                        Image(systemName: "envelope")
+                            .font(.title2)
+                            .foregroundColor(Color("ColorRed").opacity(0.5))
+                            .frame(width: 35)
+                        
+                        TextField("Email adress", text: $email)
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(30)
+                    .padding(.horizontal, 20)
+                    
+                    HStack{
+                        Image(systemName: "lock")
+                            .font(.title2)
+                            .foregroundColor(Color("ColorRed").opacity(0.5))
+                            .frame(width: 35)
+                        
+                        SecureField("Password", text: $password)
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(30)
+                    .padding(.horizontal, 20)
+                    
+                    
                     VStack{
-                        
-                        HStack{
-                            Image(systemName: "envelope")
-                                .font(.title2)
-                    .foregroundColor(Color("ColorRed").opacity(0.5))
-                                .frame(width: 35)
+                        Button {
+                            loginModel.signIn(email: email, password: password)
                             
-                            TextField("Email adress", text: $email)
+                        } label: {
+                            Text("Login")
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .padding(.horizontal, 25)
+                                .background(Color("ColorRed"))
+                                .cornerRadius(30)
+                                .shadow(radius: 10)
                         }
                         .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(30)
-                        .padding(.horizontal, 20)
-                        
-                        HStack{
-                            Image(systemName: "lock")
-                                .font(.title2)
-                                .foregroundColor(Color("ColorRed").opacity(0.5))
-                                .frame(width: 35)
+                        NavigationLink(destination: GuestSearchView(), label: {
+                            Text("Guest")
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .padding(.horizontal, 25)
+                                .background(Color("ColorRed"))
+                                .cornerRadius(30)
+                                .shadow(radius: 10)
                             
-                            SecureField("Password", text: $password)
-                        }
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(30)
-                        .padding(.horizontal, 20)
-                        
-                        
-                        VStack{
-                            Button {
-                                //loginModel.signIn(email: email, password: password)
-                                //guard !email.isEmpty, !password.isEmpty else {return}
-                                //firebaseManager.signIn(email: email, password: password)
-                                
-                                
-                            } label: {
-                                Text("Login")
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .padding(.horizontal, 25)
-                                    .background(Color("ColorRed"))
-                                    .cornerRadius(30)
-                                    .shadow(radius: 10)
-                            }
-                            .padding()
-            NavigationLink(destination: GuestSearchView(), label: {
-                                Text("Guest")
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .padding(.horizontal, 25)
-                                    .background(Color("ColorRed"))
-                                    .cornerRadius(30)
-                                    .shadow(radius: 10)
-                                
+                        })
+                            .padding(.bottom,50)
+                        HStack{
+                            NavigationLink(destination: RegisterUserView(), label:{
+                                Text("Register")
+                                    .foregroundColor(Color.red.opacity(0.9))
                             })
-                                .padding(.bottom,50)
-                            HStack{
-                                NavigationLink(destination: RegisterUserView(), label:{
-                                    Text("Register")
-                                        .foregroundColor(Color.red.opacity(0.9))
-                                })
-                            }
+                        }.alert(isPresented: $loginModel.errorLog) {
+                            errorLogin()
                         }
                     }
+                }
             })
                 .navigationTitle("Sign in")
             // .navigationViewStyle(StackNavigationViewStyle())
         }
     }
+    private func errorLogin() -> Alert {
+        return Alert(title: Text("Error during login"), message: Text("Wrong email or password. Please try again."), dismissButton: .default(Text("OK")))
+    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
