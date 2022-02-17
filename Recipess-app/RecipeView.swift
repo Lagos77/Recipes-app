@@ -76,7 +76,7 @@ struct RecipeView: View {
                         .cornerRadius(30)
                         .shadow(radius: 10)
                 }
-                .fullScreenCover(isPresented: $showSheet,content: {EditRecipeView()})
+                .fullScreenCover(isPresented: $showSheet,content: {EditRecipeView(data: data)})
             }
             .padding()
         }

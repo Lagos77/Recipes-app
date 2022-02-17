@@ -136,6 +136,26 @@ struct UserSearchView: View {
     }
     
 }
+    
+   /*
+    func checkForUser(data: dataType) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        
+        let userDocRef = FirebaseManager.shared.firestore.collection("users").document(uid)
+        let idDoc = FirebaseManager.shared.firestore.collection("recipe").document("uid")
+        
+        if userDocRef == idDoc {
+            NavigationLink(destination: RecipeView(data: data)) {
+                Text(data.title)
+            }.frame(height: UIScreen.main.bounds.height / 15)
+            return
+        }
+        
+        NavigationLink(destination: RecipeOnlyView()) {
+            Text(data.title)
+        }.frame(height: UIScreen.main.bounds.height / 15)
+    }
+    */
 
 
 extension UIApplication {
@@ -146,10 +166,12 @@ extension UIApplication {
 
 class getData : ObservableObject {
     @Published var datas = [dataType]()
+    
+    
     init(){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         
-        //Change get to snapshot. How?
-        FirebaseManager.shared.firestore.collection("recipes").getDocuments { (snap, error) in
+        FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").addSnapshotListener { (snap, error) in
             guard let snap = snap else {return}
             
             if error != nil{
@@ -177,6 +199,13 @@ struct dataType: Identifiable, Codable {
     var title : String
     var description : String
     var recipe : String
+}
+
+struct RecipeOnlyView : View {
+    
+    var body: some View {
+        Text("You are into a new view now!")
+    }
 }
 
 /*

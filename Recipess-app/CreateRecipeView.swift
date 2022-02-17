@@ -112,7 +112,7 @@ struct CreateRecipeView: View {
         
         let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
         
-        FirebaseManager.shared.firestore.collection("recipes").document(titleRecipe).setData(recipeData) { err in
+        FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(titleRecipe).setData(recipeData) { err in
             if let err = err {
                 print(err)
                 return

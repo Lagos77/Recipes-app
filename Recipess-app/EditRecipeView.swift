@@ -18,12 +18,12 @@ struct EditRecipeView: View {
     @State var changeRecipePhoto = false
     @State var openCamera = false
     @State var imageSelected = UIImage()
-    //@Binding var data: dataType
+    @State var data: dataType
     
     var body: some View{
         VStack{
             HStack{
-                TextEditor(text: $titleRecipe)
+                TextEditor(text: $data.title)
                     .disableAutocorrection(true)
                     .font(.title3)
                     .frame(height: 40)
@@ -47,8 +47,8 @@ struct EditRecipeView: View {
                     } else {
                         Image(systemName: "photo")
                             .resizable()
-                            .scaledToFill()
                             .frame(width: 260, height: 200)
+                            .scaledToFill()
                             .foregroundColor(.black)
                         
                     }
@@ -58,7 +58,7 @@ struct EditRecipeView: View {
                 ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)}
             
             HStack{
-                TextEditor(text: $descriptionText)
+                TextEditor(text: $data.description)
                     .disableAutocorrection(true)
                     .frame(height: 60)
                     .cornerRadius(5)
@@ -67,7 +67,7 @@ struct EditRecipeView: View {
             }
             HStack{
                 
-                TextEditor(text: $recipeInstructions)
+                TextEditor(text: $data.recipe)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .frame(height: 310)
@@ -77,7 +77,7 @@ struct EditRecipeView: View {
             }
             HStack{
                 Button {
-                    //Function for update
+                    editImage()
                     print("Edit is saved!")
                     //updateRecipe()
                 } label: {
@@ -109,7 +109,7 @@ struct EditRecipeView: View {
             }.padding()
             HStack{
                 Button {
-                    //Fucntion for delete
+                    deleteRecipe(recipeID: data.id)
                     print("Recipe deleted")
                 } label: {
                     Text("Delete".uppercased())
@@ -129,43 +129,62 @@ struct EditRecipeView: View {
 // Function for update
 //------------------------
     
- /*
-    private func deleteRecipe(recipeID : String) {
-        FirebaseManager.shared.firestore.collection("recipe")
-            .whereField("id", isEqualTo: recipeID).getDocuments{(snap, err) in
-                if err != nil {
-                    print("err")
+ 
+    private func deleteRecipe(recipeID : String?) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let id = recipeID else {return}
+        
+        FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(id).delete()
+        presentationMode.wrappedValue.dismiss()
+    }
+    
+    private func editImage() {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        
+           let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+            
+            guard let imageData = self.imageSelected.jpegData(compressionQuality: 0.5) else {return}
+            
+            ref.putData(imageData, metadata: nil) { metadata, error in
+                if error != nil {
                     return
                 }
-                
-                for i in snap!.documents {
-                    DispatchQueue.main.async {
-                        i.reference.delete()
+                ref.downloadURL { url, err in
+                    if err != nil {
+                        return
                     }
+                    print("Sucessfully stored with URL")
+                    guard let url = url else {return}
+                    editRecipe(recipeImageURL: url)
                 }
-                presentationMode.wrappedValue.dismiss()
-            }
-        
-    }
-  */
- 
-/*
-    private func updateRecipe(_ update: dataType) {
-        if let recipeID = update.id {
-            do {
-                let _ = try FirebaseManager.shared.firestore.collection("recipe").document(recipeID)
-            }
-            catch{
-                print(error)
             }
         }
+    
+    private func editRecipe(recipeImageURL: URL){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        
+        let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
+        
+        FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(titleRecipe).setData(recipeData) { err in
+            if let err = err {
+                print(err)
+                return
+            }
+            print("Recipe data sucessfully uploaded")
+            presentationMode.wrappedValue.dismiss()
+        }
     }
- */
     
 }
 
 struct EditRecipeView_Previews: PreviewProvider {
     static var previews: some View {
-        EditRecipeView()
+        let id = "id"
+        let url = "Photo"
+        let title = "Title"
+        let description = "Description text.."
+        let recipe = "Recipe here"
+        
+        EditRecipeView(data: dataType(id: id , url: url, title: title, description: description, recipe: recipe))
     }
 }
