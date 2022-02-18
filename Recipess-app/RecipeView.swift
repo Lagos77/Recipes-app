@@ -30,7 +30,7 @@ struct RecipeView: View {
                     .frame(width: 260, height: 200)
                     .scaledToFill()
                     .overlay(RoundedRectangle(cornerRadius: 3)
-                                .stroke(Color.black, lineWidth: 2))
+                                .stroke(Color("ColorRed"), lineWidth: 2))
             }
             
            
@@ -50,6 +50,7 @@ struct RecipeView: View {
                 }
             }
             HStack{
+                /*
                 Button {
                     print("Saved to favorites")
                 } label: {
@@ -62,8 +63,9 @@ struct RecipeView: View {
                         .cornerRadius(30)
                         .shadow(radius: 10)
                 }
-
-                Spacer()
+                 */
+                //Spacer()
+                
                 Button {
                     showSheet.toggle()
                 } label: {

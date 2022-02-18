@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct EditRecipeView: View {
     
     @State var titleRecipe = "Enter title"
+    @State var photoURL : String = ""
     @State var recipeInstructions = "Write your recipe here..."
     @State var descriptionText = "Write description for the recipe..."
     
@@ -42,14 +44,15 @@ struct EditRecipeView: View {
                             .frame(width: 260, height: 200)
                             .scaledToFill()
                             .overlay(RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.black, lineWidth: 2))
+                                        .stroke(Color("ColorRed"), lineWidth: 2))
                         
                     } else {
-                        Image(systemName: "photo")
-                            .resizable()
-                            .frame(width: 260, height: 200)
-                            .scaledToFill()
-                            .foregroundColor(.black)
+                        WebImage(url: URL(string: photoURL))
+                        .resizable()
+                        .frame(width: 260, height: 200)
+                        .scaledToFill()
+                        .overlay(RoundedRectangle(cornerRadius: 3)
+                                    .stroke(Color("ColorRed"), lineWidth: 2))
                         
                     }
                 }
@@ -122,6 +125,7 @@ struct EditRecipeView: View {
             .padding()
         }.onAppear(){
             titleRecipe = data.title
+            photoURL = data.url
             descriptionText = data.description
             recipeInstructions = data.recipe
         }
@@ -142,23 +146,18 @@ struct EditRecipeView: View {
     }
     
     private func editImage() {
-        print("Starting editImage function David")
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        print("Read uid editImage David")
         
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
         
         guard let imageData = self.imageSelected.jpegData(compressionQuality: 0.5) else {return}
-        print("passing imageData editImage function David")
         
         ref.putData(imageData, metadata: nil) { metadata, error in
             if error != nil {
-                print("Error putData imageData editImage function David")
                 return
             }
             ref.downloadURL { url, err in
                 if err != nil {
-                    print("ref.downloadURL error editImage fucntion David")
                     return
                 }
                 print("Sucessfully stored with URL")
@@ -169,20 +168,16 @@ struct EditRecipeView: View {
     }
     
     private func editRecipe(recipeImageURL: URL){
-        print("Starting editRecipe function David")
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        print("Read uid ediptRecipe David")
-        
+
         let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
-        
-        print("recipeData \(recipeData["description"]) David")
         
         FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(titleRecipe).setData(recipeData) { err in
             if let err = err {
-                print("Error during update of recipe David: \(err)")
+                print(err)
                 return
             }
-            print("Recipe data sucessfully uploaded David")
+            print("Recipe data sucessfully uploaded")
             presentationMode.wrappedValue.dismiss()
         }
     }

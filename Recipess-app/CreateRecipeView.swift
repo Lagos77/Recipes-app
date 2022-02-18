@@ -9,9 +9,11 @@ import SwiftUI
 
 struct CreateRecipeView: View {
     
-    @State var titleRecipe = "Enter title"
-    @State var recipeInstructions = "Write your recipe here..."
-    @State var descriptionText = "Write description for the recipe..."
+    @State var titleRecipe = ""
+    @State var recipeInstructions = ""
+    @State var descriptionText = ""
+    
+    @State var saveRecipe = false
     
     @State var changeRecipePhoto = false
     @State var openCamera = false
@@ -19,11 +21,12 @@ struct CreateRecipeView: View {
     
     var body: some View {
             VStack{
+                Text("Title")
                 HStack{
                     TextEditor(text: $titleRecipe)
                         .disableAutocorrection(true)
                         .font(.title3)
-                        .frame(height: 40)
+                        .frame(height: 35)
                         .cornerRadius(10)
                         .padding(.horizontal, 60)
                         .shadow(radius: 2)
@@ -52,7 +55,7 @@ struct CreateRecipeView: View {
                 }
                 .sheet(isPresented: $openCamera) {
                     ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)}
-                
+                Text("Description")
                 HStack{
                     TextEditor(text: $descriptionText)
                         .disableAutocorrection(true)
@@ -61,11 +64,12 @@ struct CreateRecipeView: View {
                         .padding(.horizontal, 15)
                         .shadow(radius: 3)
                 }
+                Text("Recipe")
                 HStack{
                     TextEditor(text: $recipeInstructions)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
-                        .frame(height: 310)
+                        .frame(height: 270)
                         .cornerRadius(5)
                         .padding(.horizontal, 15)
                         .shadow(radius: 3)
@@ -82,7 +86,9 @@ struct CreateRecipeView: View {
                         .cornerRadius(30)
                         .shadow(radius: 10)
                 }
-            }
+            }.alert(isPresented: $saveRecipe, content: {
+                alertSave()
+            })
     }
     
     private func createRecipe() {
@@ -118,8 +124,14 @@ struct CreateRecipeView: View {
                 return
             }
             print("Recipe data sucessfully uploaded")
+            self.saveRecipe = true
         }
     }
+    
+    private func alertSave() -> Alert{
+        return Alert(title: Text("Sucessful!"), message: Text("Your recipe is now created!"), dismissButton: .default(Text("OK")))
+    }
+    
 }
 
 struct CreateRecipeView_Previews: PreviewProvider {
