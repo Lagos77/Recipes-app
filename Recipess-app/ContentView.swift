@@ -9,15 +9,24 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var loginModel = LoginViewModel()
-    @ObservedObject var data = getData()
+    @State var isLoading = false
     
     var body: some View {
-        if loginModel.isLoggedIn {
-            UserSearchView(data: self.$data.datas)
-        } else {
-            SignIn(loginModel: loginModel)
+            if loginModel.isLoggedIn {
+                
+                UserSearchView()
+            } else {
+                SignIn(loginModel: loginModel)
+            }
+        }
+    
+    func startFakeNetworkCall() {
+        isLoading = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            isLoading = false
         }
     }
+    
 }
 
 struct SignIn: View{
@@ -81,6 +90,8 @@ struct SignIn: View{
                                 .shadow(radius: 10)
                         }
                         .padding()
+                        
+                        /*
                         NavigationLink(destination: GuestSearchView(), label: {
                             Text("Guest")
                                 .fontWeight(.bold)
@@ -92,6 +103,7 @@ struct SignIn: View{
                                 .shadow(radius: 10)
                             
                         })
+                        */
                             .padding(.bottom,50)
                         HStack{
                             NavigationLink(destination: RegisterUserView(), label:{
@@ -111,11 +123,24 @@ struct SignIn: View{
     private func errorLogin() -> Alert {
         return Alert(title: Text("Error during login"), message: Text("Wrong email or password. Please try again."), dismissButton: .default(Text("OK")))
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct LoadingView: View {
+    var body: some View {
+        ZStack{
+            Color(.systemBackground)
+                .ignoresSafeArea()
+                .opacity(0.5)
+            
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                .scaleEffect(3)
+        }
     }
 }
