@@ -34,7 +34,6 @@ class CurrentUserViewModel: ObservableObject{
             let username = data["username"] as? String ?? ""
             let email = data["email"] as? String ?? ""
             let profileImageURL = data["profileImageURL"] as? String ?? ""
-            
             self.userLogged = User(uid: uid, username: username, email: email, profileImageURL: profileImageURL)
         }
     }

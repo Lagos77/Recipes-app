@@ -12,14 +12,13 @@ struct UserProfile: View {
     
     @State var username = ""
     @ObservedObject var currentUser = CurrentUserViewModel()
-    @ObservedObject var viewModel = getData()
+    @ObservedObject var viewModel = GetData()
     
     var body: some View {
         NavigationView{
             HStack(spacing: 70){
                 VStack{
                     VStack{
-                        
                         WebImage(url: URL(string: currentUser.userLogged?.profileImageURL ?? ""))
                             .resizable()
                             .scaledToFill()
@@ -30,10 +29,6 @@ struct UserProfile: View {
                                         .stroke(Color(.label),
                                                 lineWidth: 1))
                             .shadow(radius: 5)
-                        
-                        //Image(systemName: "person.circle")
-                        //    .font(.system(size: 100))
-                        //    .padding(.horizontal, 10)
                     }
                     VStack{
                         Text("\(currentUser.userLogged?.username ?? "")")
@@ -46,19 +41,13 @@ struct UserProfile: View {
                             .bold()
                             .padding(.horizontal, 10)
                         VStack{
-                            
                             List(viewModel.datas) { recipe in
                                 VStack{
                                     Text(recipe.title).font(.title)
                                         .foregroundColor(Color("ColorRed"))
-                                    
                                 }.frame(height: UIScreen.main.bounds.height / 20)
-                                
                             }
-                            
                         }
-                        
-                        
                         .padding()
                     }
                 }

@@ -10,112 +10,98 @@ import SwiftUI
 struct RegisterUserView: View {
     
     @State var changeProfilePicture = false
-    @State var openCamera = false
+    @State var openImagePicker = false
     @State var imageSelected = UIImage()
-    
     @State var username = ""
     @State var email = ""
     @State var password = ""
-    
     @State var showAlert = false
     @State var errorAlert = false
     @State var alertShow = false
     
-    @State var HUD = false
-    
     var body: some View {
         
         NavigationView{
-        VStack{
             VStack{
-                Button {
-                    changeProfilePicture = true
-                    openCamera = true
-                    
-                } label: {
-                    if changeProfilePicture {
-                        Image(uiImage: imageSelected)
-                            .resizable()
-                            .frame(width: 200, height: 200)
-                            .cornerRadius(100)
-                    } else {
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 150))
-                            .padding()
-                            .foregroundColor(.black)
+                VStack{
+                    Button {
+                        changeProfilePicture = true
+                        openImagePicker = true
+                    } label: {
+                        if changeProfilePicture {
+                            Image(uiImage: imageSelected)
+                                .resizable()
+                                .frame(width: 200, height: 200)
+                                .cornerRadius(100)
+                        } else {
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 150))
+                                .padding()
+                                .foregroundColor(.black)
+                        }
                     }
                 }
-            }
-            .overlay(RoundedRectangle(cornerRadius: 100)
-                                                    .stroke(Color.black, lineWidth: 5))
-                .sheet(isPresented: $openCamera) {
+                .overlay(RoundedRectangle(cornerRadius: 100)
+                            .stroke(Color.black, lineWidth: 5))
+                .sheet(isPresented: $openImagePicker) {
                     ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)
-
-            }
+                }
                 .padding(.vertical, 50)
-
-            VStack{
-                TextField("Username", text: $username)
-                    .disableAutocorrection(true)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(30)
-                    .padding(.horizontal, 40)
                 
-                TextField("Email", text: $email)
-                    .disableAutocorrection(true)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(30)
-                    .padding(.horizontal, 40)
-                
-                SecureField("Password", text: $password)
-                    .disableAutocorrection(true)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(30)
-                    .padding(.horizontal, 40)
-            }
-            
-            HStack{
-                Button(action: {
-                    createAccount()
-                    withAnimation {
-                        HUD.toggle()
-                    }
-                    
-                }, label: {
-                    Text("Register".uppercased())
-                        .font(.caption)
-                        .bold()
-                        .foregroundColor(.gray)
+                VStack{
+                    TextField("Username", text: $username)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .padding()
-                        .padding(.horizontal, 10)
-                        .background(Capsule().stroke(Color.gray, lineWidth: 1.0))
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(30)
+                        .padding(.horizontal, 40)
+                    
+                    TextField("Email", text: $email)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(30)
+                        .padding(.horizontal, 40)
+                    
+                    SecureField("Password", text: $password)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(30)
+                        .padding(.horizontal, 40)
+                }
+                
+                HStack{
+                    Button(action: {
+                        createAccount()
+                        withAnimation {
+                        }
+                        
+                    }, label: {
+                        Text("Register".uppercased())
+                            .font(.caption)
+                            .bold()
+                            .foregroundColor(.gray)
+                            .padding()
+                            .padding(.horizontal, 10)
+                            .background(Capsule().stroke(Color.gray, lineWidth: 1.0))
+                    })
+                }
+                .alert(isPresented: $alertShow, content:  {
+                    alertEnabler()
                 })
-            }
-            .alert(isPresented: $alertShow, content:  {
-                alertEnabler()
-            })
-            .padding(.top, 80)
-            /*
-            if HUD{
-                HUDProgressView(placeHolder: "Please Wait", show: $HUD)
-            }
-             */
-            
-        }.navigationBarHidden(true)
+                .padding(.top, 80)
+            }.navigationBarHidden(true)
+        }
     }
-}
     
     func createAccount(){
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, error in
             if error != nil {
                 print("Failed to create user")
-                //Alertmessage
                 self.alertShow = true
                 self.showAlert = false
                 self.errorAlert = true
@@ -126,11 +112,11 @@ struct RegisterUserView: View {
             return
         }
     }
-
+    
     private func imageToStorage() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         
-       let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
         
         guard let imageData = self.imageSelected.jpegData(compressionQuality: 0.5) else {return}
         
@@ -186,7 +172,6 @@ struct RegisterUserView: View {
                      message: Text("An error occurred during registration. Failed to create user "), dismissButton: .default(Text("OK")))
     }
     
-    
     private func alertEnabler() -> Alert {
         if errorAlert == true {
             return errAlert()
@@ -195,11 +180,6 @@ struct RegisterUserView: View {
         }
         return alertEnabler()
     }
-    
-    
-    
-    
-    
 }
 
 struct RegisterUserView_Previews: PreviewProvider {
