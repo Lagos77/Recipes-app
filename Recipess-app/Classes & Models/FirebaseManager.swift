@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseStorage
 
 class FirebaseManager: NSObject{
     
@@ -18,7 +19,6 @@ class FirebaseManager: NSObject{
     
     override init() {
         FirebaseApp.configure()
-        
         self.auth = Auth.auth()
         self.storage = Storage.storage()
         self.firestore = Firestore.firestore()

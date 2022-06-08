@@ -45,21 +45,18 @@ struct EditRecipeView: View {
                             .scaledToFill()
                             .overlay(RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color("ColorRed"), lineWidth: 2))
-                        
                     } else {
                         WebImage(url: URL(string: photoURL))
-                        .resizable()
-                        .frame(width: 260, height: 200)
-                        .scaledToFill()
-                        .overlay(RoundedRectangle(cornerRadius: 3)
-                                    .stroke(Color("ColorRed"), lineWidth: 2))
-                        
+                            .resizable()
+                            .frame(width: 260, height: 200)
+                            .scaledToFill()
+                            .overlay(RoundedRectangle(cornerRadius: 3)
+                                        .stroke(Color("ColorRed"), lineWidth: 2))
                     }
                 }
             }
             .sheet(isPresented: $openCamera) {
                 ImagePicker(selectedImage: $imageSelected, sourceType: .photoLibrary)}
-            
             HStack{
                 TextEditor(text: $descriptionText)
                     .disableAutocorrection(true)
@@ -69,7 +66,6 @@ struct EditRecipeView: View {
                     .shadow(radius: 3)
             }
             HStack{
-                
                 TextEditor(text: $recipeInstructions)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
@@ -81,7 +77,7 @@ struct EditRecipeView: View {
             HStack{
                 Button {
                     editImage()
-                    //updateRecipe()
+                    //                    editRecipe()
                 } label: {
                     Text("Save Edit")
                         .fontWeight(.bold)
@@ -107,7 +103,6 @@ struct EditRecipeView: View {
                         .cornerRadius(30)
                         .shadow(radius: 10)
                 }
-                
             }.padding()
             HStack{
                 Button {
@@ -120,7 +115,8 @@ struct EditRecipeView: View {
                         .foregroundColor(.gray)
                         .padding()
                         .padding(.horizontal, 10)
-                    .background(Capsule().stroke(Color.gray, lineWidth: 1.0))                }
+                        .background(Capsule().stroke(Color.gray, lineWidth: 1.0))
+                }
             }
             .padding()
         }.onAppear(){
@@ -131,16 +127,9 @@ struct EditRecipeView: View {
         }
     }
     
-    //------------------------
-    // Function for delete
-    // Function for update
-    //------------------------
-    
-    
     private func deleteRecipe(recipeID : String?) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         guard let id = recipeID else {return}
-        
         FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(id).delete()
         presentationMode.wrappedValue.dismiss()
     }
@@ -169,9 +158,8 @@ struct EditRecipeView: View {
     
     private func editRecipe(recipeImageURL: URL){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-
-        let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
         
+        let recipeData = ["uid": uid,"title": self.titleRecipe,"recipeImage": recipeImageURL.absoluteString ,"description": self.descriptionText, "recipeText": self.recipeInstructions]
         FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").document(titleRecipe).setData(recipeData) { err in
             if let err = err {
                 print(err)
@@ -181,17 +169,16 @@ struct EditRecipeView: View {
             presentationMode.wrappedValue.dismiss()
         }
     }
-    
 }
 
-struct EditRecipeView_Previews: PreviewProvider {
-    static var previews: some View {
-        let id = "id"
-        let url = "Photo"
-        let title = "Title"
-        let description = "Description text.."
-        let recipe = "Recipe here"
-        
-        EditRecipeView(data: dataType(id: id , url: url, title: title, description: description, recipe: recipe))
-    }
-}
+//struct EditRecipeView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let id = "id"
+//        let url = "Photo"
+//        let title = "Title"
+//        let description = "Description text.."
+//        let recipe = "Recipe here"
+//        
+//        EditRecipeView(data: dataType(id: id , url: url, title: title, description: description, recipe: recipe))
+//    }
+//}

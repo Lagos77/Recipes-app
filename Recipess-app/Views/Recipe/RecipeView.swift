@@ -16,13 +16,13 @@ struct RecipeView: View {
     var body: some View {
         VStack{
             HStack{
-                    Text(data.title)
+                Text(data.title)
                     .font(.title3)
                     .bold()
                     .frame(height: 40)
                     .cornerRadius(10)
                     .padding(.horizontal, 60)
-                    //.shadow(radius: 2)
+                //.shadow(radius: 2)
             }
             HStack{
                 WebImage(url: URL(string: data.url))
@@ -32,15 +32,12 @@ struct RecipeView: View {
                     .overlay(RoundedRectangle(cornerRadius: 3)
                                 .stroke(Color("ColorRed"), lineWidth: 2))
             }
-            
-           
-                HStack{
-                    Text(data.description)
-                        .frame(width: 310, height: 100)
-                        .cornerRadius(5)
-                        .padding(.horizontal, 15)
-                }
-            
+            HStack{
+                Text(data.description)
+                    .frame(width: 310, height: 100)
+                    .cornerRadius(5)
+                    .padding(.horizontal, 15)
+            }
             ScrollView{
                 HStack{
                     Text(data.recipe)
@@ -50,22 +47,6 @@ struct RecipeView: View {
                 }
             }
             HStack{
-                /*
-                Button {
-                    print("Saved to favorites")
-                } label: {
-                    Text("Favorite")
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .padding()
-                        .padding(.horizontal, 25)
-                        .background(Color("ColorRed"))
-                        .cornerRadius(30)
-                        .shadow(radius: 10)
-                }
-                 */
-                //Spacer()
-                
                 Button {
                     showSheet.toggle()
                 } label: {
@@ -84,7 +65,7 @@ struct RecipeView: View {
         }
     }
 }
-                  
+
 struct RecipeView_Previews: PreviewProvider {
     static var previews: some View {
         let id = "id"
@@ -92,7 +73,7 @@ struct RecipeView_Previews: PreviewProvider {
         let title = "Title"
         let description = "Description text.."
         let recipe = "Recipe here"
-    
+        
         RecipeView(data: dataType(id: id, url: url, title: title, description: description, recipe: recipe))
     }
 }

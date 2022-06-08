@@ -9,25 +9,21 @@ import SwiftUI
 import SDWebImageSwiftUI
 import FirebaseFirestoreSwift
 
-struct UserSearchView: View {
+struct SearchView: View {
     
-    
-    @State var logutOption = false
     @ObservedObject var currentUser = CurrentUserViewModel()
-    
+    @StateObject var vm = GetData()
     @State var searchText = ""
     @State var searching = false
-    
-    @StateObject var viewModel = getData()
+    @State var logutOption = false
     
     var body: some View {
-        NavigationView {
+        NavigationView {    
             VStack{
                 HStack(spacing: 5){
                     NavigationLink {
                         UserProfile()
                     } label: {
-                        
                         WebImage(url: URL(string: currentUser.userLogged?.profileImageURL ?? ""))
                             .resizable()
                             .scaledToFill()
@@ -40,13 +36,11 @@ struct UserSearchView: View {
                             .shadow(radius: 5)
                             .padding(.horizontal, 10)
                     }
-                    
                     VStack(alignment: .leading, spacing: 4){
                         Text("\(currentUser.userLogged?.username ?? "")")
                             .font(.system(size: 24, weight: .bold))
                     }
                     Spacer()
-                    
                     Button {
                         logutOption.toggle()
                         print("Gear button works!")
@@ -56,7 +50,6 @@ struct UserSearchView: View {
                             .font(.system(size: 20, weight: .bold))
                             .padding(.horizontal, 10)
                     }
-                    
                 }
                 .actionSheet(isPresented: $logutOption) {
                     .init(title: Text("Settings"), message: Text("Do you want to sign out?"), buttons: [
@@ -70,40 +63,12 @@ struct UserSearchView: View {
                     ContentView()
                 }
                 VStack(alignment: .leading) {
-                    SearchView(searchText: $searchText, searching: $searching)
-                    
-                    List(self.viewModel.datas.filter{$0.title.lowercased().contains(self.searchText.lowercased())}) {i in
-                        
+                    ActivelyTypedSearchView(searchText: $searchText, searching: $searching)
+                    List(self.vm.datas.filter{$0.title.lowercased().contains(self.searchText.lowercased())}) {i in
                         NavigationLink(destination: RecipeView(data: i)) {
                             Text(i.title)
                         }.frame(height: UIScreen.main.bounds.height / 15)
                     }
-                    
-                    /*
-                     List{
-                     if self.searchText != ""{
-                     if self.data.filter({$0.title.lowercased().contains(self.searchText.lowercased())}).count == 0 {
-                     
-                     Text("No Results Found").foregroundColor(Color.black.opacity(0.5)).padding()
-                     
-                     } else {
-                     
-                     
-                     }
-                     }//if ends here
-                     }//List ends here
-                     */
-                    
-                    /*
-                     List{
-                     ForEach(food.filter({ (foods: String) -> Bool in
-                     return foods.hasPrefix(searchText) || searchText == ""
-                     }),id: \.self) {food in
-                     Text(food)
-                     }
-                     }
-                     */
-                    
                 }.gesture(DragGesture()
                             .onChanged({ _ in
                     UIApplication.shared.dismissKeyboard()
@@ -134,41 +99,11 @@ struct UserSearchView: View {
             .navigationBarHidden(true)
         }
     }
-    
 }
 
 extension UIApplication {
     func dismissKeyboard() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-}
-
-class getData : ObservableObject {
-    @Published var datas = [dataType]()
-    
-    
-    init(){
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        
-        FirebaseManager.shared.firestore.collection("users").document(uid).collection("recipes").addSnapshotListener { (snap, error) in
-            guard let snap = snap else {return}
-            
-            if error != nil{
-                print(error ?? "")
-                return
-            }
-            self.datas.removeAll()
-            for documents in snap.documents{
-                
-                let id = documents.documentID
-                let url = documents.get("recipeImage") as? String ?? ""
-                let title = documents.get("title") as? String ?? ""
-                let description = documents.get("description") as? String ?? ""
-                let recipe = documents.get("recipeText") as? String ?? ""
-                
-                self.datas.append(dataType(id: id, url: url, title: title, description: description, recipe: recipe))
-            }
-        }
     }
 }
 

@@ -7,12 +7,11 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct ActivelyTypedSearchView: View {
     
     @Binding var searchText : String
     @Binding var searching : Bool
     @State var text = ""
-    //@Binding var data : [dataType]
     
     var body: some View {
         ZStack{
@@ -27,21 +26,14 @@ struct SearchView: View {
                             searching = true
                         }
                     }
-                } onCommit: {
+                }
+            onCommit: {
                     withAnimation{
                         searching = false
                     }
                 }
-                
-                if self.text != "" {
-                    Button {
-                        self.text = ""
-                    } label: {
-                        Text("Cancel")
-                    }
-                    .foregroundColor(.black)
-                }
             }
+            .disableAutocorrection(true)
             .foregroundColor(.gray)
             .padding()
         }
